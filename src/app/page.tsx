@@ -1,95 +1,70 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client"
+import React, { useState } from 'react';
+import chatAPI from './chatAPI';
 
-export default function Home() {
+const MyPage: React.FC = () => {
+  const [description, setDescription] = useState('');
+  const [feedback, setFeedback] = useState('');
+  const [duration, setDuration] = useState('');
+  const [engineers, setEngineers] = useState('');
+  const [metrics, setMetrics] = useState('');
+
+  const handleClick = async () => {
+    console.log("press")
+    const response = await chatAPI(description, feedback, engineers, metrics, duration);
+    console.log(response);
+    console.log("finish api")
+  };
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+    <div style={{ display: "flex" }}>
+      <div style={{ display: "flex", flexDirection: "column", flex: 1, padding: 10, height: 200 }}>
+        <textarea
+          style={{ flex: 1, marginBottom: 5 }}
+          placeholder={"Describe your app"}
+          value={description}
+          rows={2}
+          onChange={(e) => setDescription(e.target.value)}
+        />
+        <div style={{ display: "flex", flex: 1, marginTop: 5 }}>
+          <textarea
+            style={{ flex: 1, marginBottom: 5 }}
+            placeholder={"Sprint duration"}
+            value={duration}
+            onChange={(e) => setDuration(e.target.value)}
+          />
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
+          <textarea
+            style={{ flex: 1, marginBottom: 5 }}
+            placeholder={"Engineers"}
+            value={engineers}
+            onChange={(e) => setEngineers(e.target.value)}
+          />
+          <textarea
+            style={{ flex: 1, marginBottom: 5 }}
+            placeholder={"Metrics"}
+            value={metrics}
+            onChange={(e) => setMetrics(e.target.value)}
+          />
+        </div>
+        <textarea
+          style={{ flex: 1, marginTop: 5, marginBottom: 5 }}
+          placeholder={"Insert any feedback, comments, bugs or suggestions you've received"}
+          value={feedback}
+          rows={4}
+          onChange={(e) => setFeedback(e.target.value)}
+        />
+
+        <button style={{ paddingTop: 5, paddingBottom: 5 }} onClick={handleClick}>Generate</button>
+      </div>
+      <div style={{ flex: 1, padding: 10 }}>
+        <textarea
+          style={{ width: '100%', height: "100%" }}
+          readOnly
         />
       </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+    </div>
   );
-}
+};
+
+export default MyPage;
