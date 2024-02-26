@@ -7,7 +7,7 @@ export default function MyPage() {
     <React.Fragment>
       <div style={{ padding: 10 }}>
         <h1>Skanda</h1>
-      <p>Auto-generate your sprint plan based on customer feedback</p>
+        <p>Auto-generate your sprint plan based on customer feedback</p>
       </div>
       <SprintPlan />
     </React.Fragment>

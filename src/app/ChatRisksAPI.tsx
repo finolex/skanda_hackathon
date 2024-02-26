@@ -1,7 +1,7 @@
 require('dotenv').config();
 import OpenAI from "openai";
 
-export default function ChatSummaryAPI(description: string, feedback: string, engineers: string, metrics: string, duration: string) {
+export default function ChatFullAPI(description: string, feedback: string, engineers: string, metrics: string, duration: string, summary: string) {
     const openai = new OpenAI({
         apiKey: "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",
         dangerouslyAllowBrowser: true
@@ -12,7 +12,7 @@ export default function ChatSummaryAPI(description: string, feedback: string, en
         messages: [
             {
                 "role": "system",
-                "content": "You are a seasoned product manager that has worked across many industries, and stages of startups. You are being asked for advice on prioritizing the top bugs to work on based on the feedback they have received, and the constraints on their resources.\n\nFirst, understand what their app does, and what the feedback they've received is.\n\nThen, list out the top 3 product roadmap items to work on in bullet form with no further explanation. Only include engineering tasks and exclude any sales, marketing, or admin tasks. Keep your answer professional and concise, with no extra words."
+                "content": "You are a seasoned product manager that has worked across many industries, and stages of startups. You are being asked for advice on prioritizing the top bugs to work on based on the feedback they have received, and the constraints on their resources.\n\nFirst, understand what their app does, and what the feedback they've received is.\n\nBased on the summary of sprint plan, list out the top 3 risks to the execution of the sprint or any risk that might be left out. Examples could include product risks or business risks, such as churn, loss of revenue, more bugs, instability of platform, etc."
             },
             {
                 "role": "user",
@@ -33,6 +33,10 @@ export default function ChatSummaryAPI(description: string, feedback: string, en
             {
                 "role": "user",
                 "content": "Sprint duration:" + duration
+            },
+            {
+                "role": "user",
+                "content": "Sprint plan summary:" + summary
             }
         ],
         temperature: 0,

@@ -3,9 +3,9 @@ require('dotenv').config();
 import React, { useState } from 'react';
 import ChatSummaryAPI from '../ChatSummaryAPI';
 import ChatFullAPI from '../ChatFullAPI';
+import ChatRisksAPI from '../ChatRisksAPI';
 import { Button, TextField, Paper } from '@mui/material'
-import Markdown from "react-markdown"
-import ChatFull from './ChatFull';
+import ChatResponse from './ChatResponse';
 
 export default function SprintPlan() {
     const [description, setDescription] = useState('');
@@ -15,31 +15,35 @@ export default function SprintPlan() {
     const [metrics, setMetrics] = useState('');
     const [dataValidationError, setDataValidationError] = useState('')
     const [summary, setSummary] = useState('Fill details and generate summary');
-    const [full, setFull] = useState('Get full sprint plan');
+    const [full, setFull] = useState('');
+    const [risks, setRisks] = useState('')
   
-    const handleGenerateSummary = async () => {
-      if (description != '' && duration != '' && engineers != '' && metrics != '' && feedback != '') {
-        setDataValidationError('')
-        try { 
-          const response = await ChatSummaryAPI(description, feedback, engineers, metrics, duration);
-          setSummary(response.choices[0].message.content || "")
-        } catch (e) {
-          alert(e)
-        }
+    const handleGenerate = async () => {
+      if (description !== '' && duration !== '' && engineers !== '' && metrics !== '' && feedback !== '') {
+          setDataValidationError('');
+          setFull('');
+          setRisks('');
+  
+          try {
+              setSummary("Generating...");
+              const summaryResponse = await ChatSummaryAPI(description, feedback, engineers, metrics, duration);
+              setSummary(summaryResponse.choices[0].message.content || "");
+  
+              setFull("Loading...");
+              setRisks("Loading...");
+              const [fullResponse, risksResponse] = await Promise.all([
+                  ChatFullAPI(description, feedback, engineers, metrics, duration, summary),
+                  ChatRisksAPI(description, feedback, engineers, metrics, duration, summary)
+              ]);
+              setFull(fullResponse.choices[0].message.content || "");
+              setRisks(risksResponse.choices[0].message.content || "");
+          } catch (error) {
+              alert(error);
+          }
       } else {
-        setDataValidationError("Please fill all of the above fields first")
+          setDataValidationError("Please fill all of the above fields first");
       }
-      
-    };
-
-    const handleGenerateFull = async () => {
-      try { 
-        const response = await ChatFullAPI(description, feedback, engineers, metrics, duration, summary);
-        setFull(response.choices[0].message.content || "")
-      } catch (e) {
-        alert(e)
-      }
-    };
+  };
 
     return(
     <div style={{ display: "flex" }}>
@@ -92,20 +96,24 @@ export default function SprintPlan() {
 
         <Button 
         style={{ paddingTop: 5, paddingBottom: 5 }} 
-        onClick={handleGenerateSummary}
+        onClick={handleGenerate}
         variant={"outlined"}
-        >Generate summary</Button>
+        >Generate</Button>
         <p style={{fontSize: 12, color: 'red'}}>{dataValidationError}</p>
       </div>
       <div style={{ flex: 1, padding: 10 }}>
         <Paper
           style={{ padding: 20, fontSize: 14 }}
-          children={<Markdown>{summary}</Markdown>}
+          children={<ChatResponse message={summary} title={"Sprint plan summary"}/>}
         />
-        {summary != 'Fill details and generate summary' && <Paper
-          style={{ padding: 20, fontSize: 14, marginTop: 10, cursor: full == 'Get full sprint plan' ? "pointer" : 'default'}}
-          onClick={full == 'Get full sprint plan' ? handleGenerateFull : undefined}
-          children={<Markdown>{full}</Markdown>}
+        {summary == 'Fill details and generate summary' || summary == 'Generating...' ? undefined : <Paper
+          style={{ padding: 20, fontSize: 14, marginTop: 10, }}
+          children={<ChatResponse message={full} title={"Detailed sprint plan"}/>}
+        />}
+
+        {summary == 'Fill details and generate summary' || summary == 'Generating...' ? undefined : <Paper
+          style={{ padding: 20, fontSize: 14, marginTop: 10, }}
+          children={<ChatResponse message={risks} title={"Key risks"}/>}
         />}
       </div>
     </div>

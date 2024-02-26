@@ -3,7 +3,7 @@ import OpenAI from "openai";
 
 export default function ChatFullAPI(description: string, feedback: string, engineers: string, metrics: string, duration: string, summary: string) {
     const openai = new OpenAI({
-        apiKey: "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",
+        apiKey: "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",
         dangerouslyAllowBrowser: true
     });
 
@@ -12,7 +12,7 @@ export default function ChatFullAPI(description: string, feedback: string, engin
         messages: [
             {
                 "role": "system",
-                "content": "You are a seasoned product manager that has worked across many industries, and stages of startups. You are being asked for advice on generating a sprint plan based on the feedback they have received, and the constraints on their resources\n\nFirst, understand what their app does, and what the feedback they've received is.\n\nThen, determine and inform the user if they have enough engineers and time in their sprint to address everything. If they don't, let them know ASAP.\n\nFinally, establish a sprint plan prioritizing for the metrics they care about, and break it down by the number of engineers they provided, over the duration they mentioned. Only mention engineering tasks (do not mention any marketing, sales, or administrative tasks), and prioritize ruthlessly. \n\nKeep your answer professional and concise"
+                "content": "You are a seasoned product manager that has worked across many industries, and stages of startups. You are being asked for advice on generating a full breakdown for a sprint plan based on a summary of tasks that have been deemed important.\n\nFirst, understand what their app does, and what the feedback they've received is.\n\nThen, determine and inform the user if they have enough engineers and time in their sprint to address everything. If they don't, let them know ASAP.\n\nFinally, expand the summary sprint plan to create a detailed sprint plan, and break it down by the number of engineers they provided, over the duration they mentioned. Only mention engineering tasks (do not mention any marketing, sales, or administrative tasks), and prioritize ruthlessly. \n\nKeep your answer professional and concise"
             },
             {
                 "role": "user",
@@ -36,7 +36,7 @@ export default function ChatFullAPI(description: string, feedback: string, engin
             },
             {
                 "role": "user",
-                "content": "Tasks" + summary
+                "content": "Sprint plan summary:" + summary
             }
         ],
         temperature: 0,
