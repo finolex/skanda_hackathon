@@ -6,7 +6,7 @@ const openai = new OpenAI({
 
 export default function (description: string, feedback: string, engineers: string, metrics: string, duration: string) {
     const response = openai.chat.completions.create({
-        model: "gpt-4-turbo-preview",
+        model: "gpt-4",
         messages: [
             {
                 "role": "system",
