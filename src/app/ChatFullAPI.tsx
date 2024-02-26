@@ -1,10 +1,12 @@
+require('dotenv').config();
 import OpenAI from "openai";
 
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-});
+export default function ChatFullAPI(description: string, feedback: string, engineers: string, metrics: string, duration: string, summary: string) {
+    const openai = new OpenAI({
+        apiKey: "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",
+        dangerouslyAllowBrowser: true
+    });
 
-export default function (description: string, feedback: string, engineers: string, metrics: string, duration: string) {
     const response = openai.chat.completions.create({
         model: "gpt-4",
         messages: [
@@ -31,6 +33,10 @@ export default function (description: string, feedback: string, engineers: strin
             {
                 "role": "user",
                 "content": "Sprint duration:" + duration
+            },
+            {
+                "role": "user",
+                "content": "Tasks" + summary
             }
         ],
         temperature: 0,
