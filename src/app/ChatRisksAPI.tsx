@@ -3,7 +3,7 @@ import OpenAI from "openai";
 
 export default function ChatFullAPI(description: string, feedback: string, engineers: string, metrics: string, duration: string, summary: string) {
     const openai = new OpenAI({
-        apiKey: "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",
+        apiKey: "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",
         dangerouslyAllowBrowser: true
     });
 
