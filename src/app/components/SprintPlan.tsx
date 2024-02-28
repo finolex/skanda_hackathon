@@ -110,7 +110,7 @@ export default function SprintPlan(props: any) {
               <TextField
                 required={true}
                 placeholder={"Title of feedback"}
-                onChange={(e) => setFeedback(e.target.value)}
+                onChange={(e) => setFeedbackTitle(e.target.value)}
               />
               <TextField
                 required={true}
