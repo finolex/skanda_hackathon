@@ -75,7 +75,8 @@ export default function SprintPlan(props: any) {
 
       try {
         setSummary("Generating...");
-        const summaryResponse = await ChatSummaryAPI(description, feedback, engineers, metrics, duration);
+        const feedbackString = feedbackArrayState.map(item => `${item.title}: ${item.feedback}`).join('\n');
+        const summaryResponse = await ChatSummaryAPI(description, feedbackString, engineers, metrics, duration);
         setSummary(summaryResponse.choices[0].message.content || "");
 
         setFull("Loading...");
