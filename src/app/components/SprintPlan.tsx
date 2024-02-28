@@ -7,10 +7,9 @@ import ChatRisksAPI from '../ChatRisksAPI';
 import { Button, TextField, Paper } from '@mui/material'
 import ChatResponse from './ChatResponse';
 import FeedbackCard from './FeedbackCard';
-import readDB from '../readDB';
 
 export default function SprintPlan(props: any) {
-  const { description, duration, engineers, metrics } = props
+  const { description, duration, engineers, metrics, chatGPTKey } = props
   const [feedback, setFeedback] = useState('');
   const [feedbackTitle, setFeedbackTitle] = useState('')
   const [dataValidationError, setDataValidationError] = useState('')
@@ -46,7 +45,7 @@ export default function SprintPlan(props: any) {
 
   const handleGenerate = async () => {
     const concatenatedFeedback = feedbackArrayState.map(item => item.feedback).join('\n');
-    if (description !== '' && duration !== '' && engineers !== '' && metrics !== '' && (feedback !== '' && feedbackTitle !== '' || concatenatedFeedback !== '')) {
+    if (description !== '' && duration !== '' && engineers !== '' && metrics !== '' && chatGPTKey !== '' && (feedback !== '' && feedbackTitle !== '' || concatenatedFeedback !== '')) {
       if (feedback !== '' && feedbackTitle !== '') {
         handleAddFeedback()
       } else if (feedback == '' || feedbackTitle == '') {
@@ -60,14 +59,14 @@ export default function SprintPlan(props: any) {
       try {
         setSummary("Generating...");
         const feedbackString = feedbackArrayState.map(item => `${item.title}: ${item.feedback}`).join('\n');
-        const summaryResponse = await ChatSummaryAPI(description, feedbackString, engineers, metrics, duration);
+        const summaryResponse = await ChatSummaryAPI(description, feedbackString, engineers, metrics, duration, chatGPTKey);
         setSummary(summaryResponse.choices[0].message.content || "");
 
         setFull("Loading...");
         setRisks("Loading...");
         const [fullResponse, risksResponse] = await Promise.all([
-          ChatFullAPI(description, feedback, engineers, metrics, duration, summary),
-          ChatRisksAPI(description, feedback, engineers, metrics, duration, summary)
+          ChatFullAPI(description, feedback, engineers, metrics, duration, summary, chatGPTKey),
+          ChatRisksAPI(description, feedback, engineers, metrics, duration, summary, chatGPTKey)
         ]);
         setFull(fullResponse.choices[0].message.content || "");
         setRisks(risksResponse.choices[0].message.content || "");
@@ -75,7 +74,7 @@ export default function SprintPlan(props: any) {
         alert(error);
       }
     } else {
-      setDataValidationError("Please fill all of the above fields first");
+      setDataValidationError("Please fill all of the above fields, and have at least one feedback first");
     }
   };
 
@@ -115,19 +114,16 @@ export default function SprintPlan(props: any) {
 
 
         <div style={{ flex: 1, padding: 10 }}>
-          <Paper
-            style={{ padding: 20, fontSize: 14 }}
-            children={<ChatResponse message={summary} title={"Sprint plan summary"} />}
-          />
+          <Paper style={{ padding: 20, fontSize: 14 }}>
+            <ChatResponse message={summary} title={"Sprint plan summary"} />
+          </Paper>
           {summary == 'Fill details and generate summary' || summary == 'Generating...' ? undefined : <Paper
             style={{ padding: 20, fontSize: 14, marginTop: 10, }}
-            children={<ChatResponse message={full} title={"Detailed sprint plan"} />}
-          />}
+          ><ChatResponse message={full} title={"Detailed sprint plan"} /></Paper>}
 
           {summary == 'Fill details and generate summary' || summary == 'Generating...' ? undefined : <Paper
             style={{ padding: 20, fontSize: 14, marginTop: 10, }}
-            children={<ChatResponse message={risks} title={"Key risks"} />}
-          />}
+          ><ChatResponse message={risks} title={"Key risks"} /></Paper>}
         </div>
       </div>
     </div>

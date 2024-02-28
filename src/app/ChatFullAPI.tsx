@@ -1,9 +1,9 @@
 require('dotenv').config();
 import OpenAI from "openai";
 
-export default function ChatFullAPI(description: string, feedback: string, engineers: string, metrics: string, duration: string, summary: string) {
+export default function ChatFullAPI(description: string, feedback: string, engineers: string, metrics: string, duration: string, summary: string, chatGPTKey: string) {
     const openai = new OpenAI({
-        apiKey: "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",
+        apiKey: chatGPTKey,
         dangerouslyAllowBrowser: true
     });
 

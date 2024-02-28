@@ -1,8 +1,6 @@
 import React from "react"
 
-export default function FeedbackCard(props) {
-    const { title = "Title", date = "11/12/2024", feedback = "Feedback" } = props
-
+export default function FeedbackCard(title: string, date: string, feedback: string) {
     function truncateText(text: string, maxLength: number) {
         return text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
     };
