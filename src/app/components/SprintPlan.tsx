@@ -17,7 +17,8 @@ export default function SprintPlan(props: any) {
   const [full, setFull] = useState('');
   const [risks, setRisks] = useState('')
   const [feedbackError, setFeedbackError] = useState("")
-  const [feedbackArrayState, setFeedbackArrayState] = useState([])
+  const [feedbackArrayState, setFeedbackArrayState] = useState<{ title: string, feedback: string, date: string }[]>([]);
+
 
   function handleAddFeedback() {
     if (feedback != '' && feedbackTitle != '') {
