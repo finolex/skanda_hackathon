@@ -10,19 +10,6 @@ export default function MyPage() {
   const [engineers, setEngineers] = useState('');
   const [metrics, setMetrics] = useState('');
 
-  useEffect(() => {
-    readDB("appdetails")
-      .then((data: any) => {
-        setDescription(data?.items[0]?.value?.appdescription);
-        setDuration(data?.items[0]?.value?.sprintduration);
-        setEngineers(data?.items[0]?.value?.engineers);
-        setMetrics(data?.items[0]?.value?.metrics);
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error);
-      });
-  }, []);
-
   return (
     <React.Fragment>
       <div style={{ padding: 10 }}>

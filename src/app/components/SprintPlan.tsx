@@ -20,25 +20,6 @@ export default function SprintPlan(props: any) {
   const [feedbackError, setFeedbackError] = useState("")
   const [feedbackArrayState, setFeedbackArrayState] = useState([])
 
-  useEffect(() => {
-    readDB("feedback")
-      .then((data: any) => {
-        data.items.map((item: any) => {
-          const feedbackItem = {
-            title: item.value.feedbacktitle,
-            feedback: item.value.feedbackmessage,
-            date: item.value.date
-          }
-          console.log(feedbackItem)
-          setFeedbackArrayState([feedbackItem, ...feedbackArrayState])
-        });
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error);
-      });
-  }, []);
-
-
   function handleAddFeedback() {
     if (feedback != '' && feedbackTitle != '') {
       setFeedbackError('')
