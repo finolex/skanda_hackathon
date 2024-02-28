@@ -1,13 +1,27 @@
 "use client"
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import SprintPlan from "./components/SprintPlan"
 import { TextField, Button } from '@mui/material'
+import readDB from "./readDB"
 
 export default function MyPage() {
   const [description, setDescription] = useState('');
   const [duration, setDuration] = useState('');
   const [engineers, setEngineers] = useState('');
   const [metrics, setMetrics] = useState('');
+
+  useEffect(() => {
+    readDB("appdetails")
+      .then((data: any) => {
+        setDescription(data?.items[0]?.value?.appdescription);
+        setDuration(data?.items[0]?.value?.sprintduration);
+        setEngineers(data?.items[0]?.value?.engineers);
+        setMetrics(data?.items[0]?.value?.metrics);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  }, []);
 
   return (
     <React.Fragment>

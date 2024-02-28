@@ -7,6 +7,7 @@ import ChatRisksAPI from '../ChatRisksAPI';
 import { Button, TextField, Paper } from '@mui/material'
 import ChatResponse from './ChatResponse';
 import FeedbackCard from './FeedbackCard';
+import readDB from '../readDB';
 
 export default function SprintPlan(props: any) {
   const { description, duration, engineers, metrics } = props
@@ -19,22 +20,24 @@ export default function SprintPlan(props: any) {
   const [feedbackError, setFeedbackError] = useState("")
   const [feedbackArrayState, setFeedbackArrayState] = useState([])
 
-  const feedbackArray = [
-    {
-      title: "Title",
-      feedback: "Feedback",
-      date: "11/12/2024"
-    },
-    {
-      title: "This is a super long title that's truncated so you won't see all of it",
-      feedback: "Feedback: if it helps, we love your product and use it every day.Take everything I say with a grain of salt, since you’ve probably thought of all of this.\n\nI would suggest thinking about some means for leveraged distribution.Even though we use Axolo every day, it’s not something that comes up when I talk to other software engineers since code review efficiency is a somewhat second- order problem(vs.Jira sucks so bad → \"you should try out Linear”).\n\nHow are most people hearing about you? Is there some way you can take advantage of this? IMO you guys may have a distribution problem, I don’t see you guys around on the internet. Is there some way you can insert yourself into open source projects to increase awareness, code reviews via Discord? idk\n\nThe one hill I’m willing to die on — I would not go the Microsoft Teams route, at most it’s 2x-ing your TAM (some number under 10), the user base is pretty similar to whoever is on Slack (teams), and I would argue you already have a relatively big TAM on Slack. 130 paying customers is nothing relative to how many companies are on Slack.\n\nI also don’t know if outbound sales would work. I agree most developer tools like this are bottoms-up (hence why I think attaching yourself to open-source projects might be an idea). You need this to spread like a virus and get bottoms-up adoption. This is how we found Axolo. TBVH I wasn’t initially sold on it AND I’m an engineer. IMO Axolo is very much a tool that becomes valuable once people use it. 1-1 sales calls is not gonna be leveraged, and you’ll run out of money before you’re able to scale this.\n\nCode reviews via GPT might be interesting, but I anticipate this to be a pretty crowded space. Does your current product give you any advantages in that area?\n\n- From a fellow founder who wants Axolo to stay alive\n\nAnother “fellow founder who wants Axolo to stay alive” here. My team loves Axolo too.\n\nI dug back through early mentions of Axolo in our Slack. I learned about it back in 2022 from one of our employees who used it as his previous job, who recommended that I try it out. I bet most engineers on our team would push for it at the next company they work for. But I don’t think any of us talk about Axolo outside work.\n\nHave you tried a referral program where existing users get Axolo credits for making referrals?\n\nEnterprise sales seems promising. Have you tried to hire a sales person with enterprise experience? It’s so different from selling to small startups, something my team is experiencing firsthand.\n\nMy team also recently worked with a sales consultant that gave us advice and detailed feedback on our sales function. That might be worth trying",
-      date: "6/08/2023"
-    }
-  ]
-
   useEffect(() => {
-    setFeedbackArrayState(feedbackArray)
-  }, [])
+    readDB("feedback")
+      .then((data: any) => {
+        data.items.map((item: any) => {
+          const feedbackItem = {
+            title: item.value.feedbacktitle,
+            feedback: item.value.feedbackmessage,
+            date: item.value.date
+          }
+          console.log(feedbackItem)
+          setFeedbackArrayState([feedbackItem, ...feedbackArrayState])
+        });
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  }, []);
+
 
   function handleAddFeedback() {
     if (feedback != '' && feedbackTitle != '') {
